@@ -8,12 +8,8 @@ class MapProvider with ChangeNotifier {
   getMarker() => _marker;
   getCircle() => _circle;
 
-  void updateMarker(Map<String, Marker> marker) {
+  void updateGempa(Map<String, Marker> marker, Map<String, Circle> circle) {
     _marker = marker;
-    notifyListeners();
-  }
-
-  void updateCircle(Map<String, Circle> circle) {
     _circle = circle;
     notifyListeners();
   }

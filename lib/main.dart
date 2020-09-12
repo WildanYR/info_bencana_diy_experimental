@@ -67,53 +67,35 @@ class MbFAB extends StatefulWidget {
 }
 
 class _MbFABState extends State<MbFAB> {
-  static final List<LatLng> _lokasi = [
-    LatLng(-7.998507, 110.249508), //lokasi user bahaya 1 btl
-    LatLng(-7.988116, 110.221247), //lokasi user bahaya 2 kp
-    LatLng(-7.804253, 110.365104), //lokasi user jauh
-    LatLng(-8.037029, 110.228829), //titik gempa 2 btl
-    LatLng(-8.036211, 110.199313), //titik gempa 3 kp
-    LatLng(-8.213697, 110.445063), //titik gempa 1 gk
-    LatLng(-7.993852, 110.252240), //titik evakuasi 2 btl
-    LatLng(-7.971942, 110.226579), //titik evakuasi 3 kp
-  ];
-
-  static final List<String> _locLabel = [
-    'Lokasi saat ini',
-    'Lokasi saat ini',
-    'Lokasi saat ini',
-    'Titik Gempa',
-    'Titik Gempa',
-    'Titik Gempa',
-    'Titik Evakuasi',
-    'Titik Evakuasi'
-  ];
-
-  static final List<double> _locIconColor = [
-    BitmapDescriptor.hueBlue,
-    BitmapDescriptor.hueBlue,
-    BitmapDescriptor.hueBlue,
-    BitmapDescriptor.hueRed,
-    BitmapDescriptor.hueRed,
-    BitmapDescriptor.hueRed,
-    BitmapDescriptor.hueGreen,
-    BitmapDescriptor.hueGreen
-  ];
-
-  /*
-    stat [
-      7.0-17km,
-      6.0-20km,
-      8.0-23km,
-      5.0-15km,
-      5.0-19km
-    ]
-  */
-
-  static final List<double> _radiusTsunami = [
-    10000, //radius tsunami 1
-    8000, //radius tsunami 2
-    10000 //radius tsunami 3
+  static final List<Map> _simLoc = [
+    {
+      'titik_gempa': LatLng(-8.348436, 110.136780),
+      'magnitude': '5.0',
+      'deep': '19 Km',
+      'radius': 20000.0,
+      'lokasi_user': LatLng(-7.867454, 110.344263)
+    },
+    {
+      'titik_gempa': LatLng(-7.885028, 110.307106),
+      'magnitude': '7.0',
+      'deep': '15 Km',
+      'radius': 10000.0,
+      'lokasi_user': LatLng(-7.891414, 110.450356)
+    },
+    {
+      'titik_gempa': LatLng(-8.349574, 110.224588),
+      'magnitude': '6.0',
+      'deep': '14 Km',
+      'radius': 42000.0,
+      'lokasi_user': LatLng(-7.860809, 110.411745)
+    },
+    {
+      'titik_gempa': LatLng(-8.349574, 110.224588),
+      'magnitude': '8.0',
+      'deep': '19 Km',
+      'radius': 41000.0,
+      'lokasi_user': LatLng(-7.991854, 110.305473)
+    }
   ];
 
   @override
@@ -125,110 +107,92 @@ class _MbFABState extends State<MbFAB> {
       overlayOpacity: 0.5,
       children: [
         SpeedDialChild(
-            label: 'Tsunami 1',
-            child: Icon(Icons.directions_run),
-            backgroundColor: Colors.red,
-            onTap: () {
-              _simulasi(mapProvider, '10010010', '100');
-              showBottomSheet(
-                  context: context,
-                  builder: (context) => MbBottomSheet(
-                      magnitude: '7.0',
-                      deep: '17 Km',
-                      tsunami: true,
-                      safe: false));
-            }),
-        SpeedDialChild(
-            label: 'Tsunami 2',
-            child: Icon(Icons.directions_run),
-            backgroundColor: Colors.red,
-            onTap: () {
-              _simulasi(mapProvider, '01001001', '010');
-              showBottomSheet(
-                  context: context,
-                  builder: (context) => MbBottomSheet(
-                      magnitude: '6.0',
-                      deep: '20 Km',
-                      tsunami: true,
-                      safe: false));
-            }),
-        SpeedDialChild(
-            label: 'Tsunami 3',
-            child: Icon(Icons.broken_image),
-            backgroundColor: Colors.red,
-            onTap: () {
-              _simulasi(mapProvider, '00100100', '001');
-              showBottomSheet(
-                  context: context,
-                  builder: (context) => MbBottomSheet(
-                      magnitude: '8.0',
-                      deep: '23 Km',
-                      tsunami: true,
-                      safe: true));
-            }),
-        SpeedDialChild(
-            label: 'Gempa 1',
+            label: 'Simulasi 1',
             child: Icon(Icons.broken_image),
             backgroundColor: Colors.yellow,
             onTap: () {
-              _simulasi(mapProvider, '10010000', '000');
+              _gempa(mapProvider, _simLoc[0]);
               showBottomSheet(
                   context: context,
                   builder: (context) => MbBottomSheet(
-                      magnitude: '5.0',
-                      deep: '15 Km',
+                      magnitude: _simLoc[0]['magnitude'],
+                      deep: _simLoc[0]['deep'],
                       tsunami: false,
                       safe: true));
             }),
         SpeedDialChild(
-            label: 'Gempa 2',
+            label: 'Simulasi 2',
             child: Icon(Icons.broken_image),
             backgroundColor: Colors.yellow,
             onTap: () {
-              _simulasi(mapProvider, '00101000', '000');
+              _gempa(mapProvider, _simLoc[1]);
               showBottomSheet(
                   context: context,
                   builder: (context) => MbBottomSheet(
-                      magnitude: '5.0',
-                      deep: '19 Km',
+                      magnitude: _simLoc[1]['magnitude'],
+                      deep: _simLoc[1]['deep'],
                       tsunami: false,
                       safe: true));
-            })
+            }),
+        SpeedDialChild(
+            label: 'Simulasi 3',
+            child: Icon(Icons.broken_image),
+            backgroundColor: Colors.red,
+            onTap: () {
+              _gempa(mapProvider, _simLoc[2]);
+              showBottomSheet(
+                  context: context,
+                  builder: (context) => MbBottomSheet(
+                      magnitude: _simLoc[2]['magnitude'],
+                      deep: _simLoc[2]['deep'],
+                      tsunami: true,
+                      safe: true));
+            }),
+        SpeedDialChild(
+            label: 'Simulasi 4',
+            child: Icon(Icons.directions_run),
+            backgroundColor: Colors.red,
+            onTap: () {
+              _gempa(mapProvider, _simLoc[3]);
+              showBottomSheet(
+                  context: context,
+                  builder: (context) => MbBottomSheet(
+                      magnitude: _simLoc[3]['magnitude'],
+                      deep: _simLoc[3]['deep'],
+                      tsunami: true,
+                      safe: false));
+            }),
       ],
     );
   }
 
-  _simulasi(mapProvider, String point, String rad) {
+  _gempa(mapProvider, dataGempa) {
     Map<String, Marker> markers = {};
     Map<String, Circle> circles = {};
-    int index = 0;
-    for (int i = 0; i < point.length; i++) {
-      if (point[i] == '1') {
-        markers[index.toString()] = Marker(
-            markerId: MarkerId('marker-' + index.toString()),
-            position: _lokasi[i],
-            icon: BitmapDescriptor.defaultMarkerWithHue(_locIconColor[i]),
-            infoWindow: InfoWindow(title: _locLabel[i]));
-        index++;
-      }
-    }
-    index = 0;
-    for (int i = 0; i < rad.length; i++) {
-      if (rad[i] == '1') {
-        circles[index.toString()] = Circle(
-          circleId: CircleId('circle-' + index.toString()),
+
+    markers['titik_gempa'] = Marker(
+        markerId: MarkerId('marker_titik_gempa'),
+        position: dataGempa['titik_gempa'],
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: InfoWindow(title: 'Titik Gempa'));
+    markers['lokasi_user'] = Marker(
+        markerId: MarkerId('marker_lokasi_user'),
+        position: dataGempa['lokasi_user'],
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: InfoWindow(title: 'Lokasi saat ini'));
+
+    if (dataGempa['radius'] != 0.0) {
+      circles['radius_dampak'] = Circle(
+          circleId: CircleId('radius_dampak'),
           zIndex: 1000,
           fillColor: Color.fromARGB(127, 244, 67, 54),
           strokeColor: Colors.red,
           strokeWidth: 2,
-          center: _lokasi[i + 3],
-          radius: _radiusTsunami[i],
-        );
-        index++;
-      }
+          center: dataGempa['titik_gempa'],
+          radius: dataGempa['radius']);
     }
-    mapProvider.updateMarker(markers);
-    mapProvider.updateCircle(circles);
+
+    mapProvider.updateGempa(markers, circles);
   }
 }
 
